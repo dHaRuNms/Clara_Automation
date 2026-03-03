@@ -1,0 +1,10 @@
+Agent: Hello Ben, welcome to the onboarding call. Let's finalize the configuration. What are your exact business hours?
+Ben: Our business hours are Monday to Friday, 8 AM to 5 PM, Mountain Time.
+Agent: Got it. And what constitutes an emergency?
+Ben: An emergency is any power outage, sparking, or exposed wires.
+Agent: And how should we route emergency calls after hours?
+Ben: If it's an emergency, route the call to my cell at 403-870-8494. If I don't answer, tell them we will dispatch someone as soon as possible.
+Agent: What about non-emergencies?
+Ben: For non-emergencies, just collect their details and let them know we'll call them back during business hours.
+Agent: Any specific integration rules?
+Ben: Yes, never create emergency jobs automatically in Jobber without my approval. Oh, and if a call transfer fails after 30 seconds, fallback to voicemail.

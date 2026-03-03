@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=America/New_York
+      - N8N_BASH_ALLOW_EXECUTE_COMMAND=true
+      - RETELL_API_KEY=key_8b72c05fa199b67482f7bcc7e083
+      - ASSEMBLYAI_API_KEY=${ASSEMBLYAI_API_KEY}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      # Map the local project folder into the n8n container
+      - ./:/data
+
+volumes:
+  n8n_data:
