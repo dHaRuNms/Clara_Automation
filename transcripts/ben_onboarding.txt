@@ -7,4 +7,5 @@ Ben: If it's an emergency, route the call to my cell at 403-870-8494. If I don't
 Agent: What about non-emergencies?
 Ben: For non-emergencies, just collect their details and let them know we'll call them back during business hours.
 Agent: Any specific integration rules?
-Ben: Yes, never create emergency jobs automatically in Jobber without my approval. Oh, and if a call transfer fails after 30 seconds, fallback to voicemail.
+Ben: Yes, never create emergency jobs automatically in Jobber without my approval. Oh, and if a call transfer fails after 30 seconds, fallback to voicemail. Oh, and I want to confirm the inspection is scheduled for March 15th at 10 AM.
+Agent: Got it, Ben. Scheduled for March 15th at 10 AM. Anything else?

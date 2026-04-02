@@ -1,0 +1,44 @@
+01:11:14 [INFO] clara-server: ═══════════════════════════════════════════════
+01:11:14 [INFO] clara-server:   Clara AI – Dashboard & API Server
+01:11:14 [INFO] clara-server:   http://localhost:8765
+01:11:14 [INFO] clara-server: ═══════════════════════════════════════════════
+ * Serving Flask app 'pipeline_server'
+ * Debug mode: on
+01:11:14 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8765
+ * Running on http://192.168.1.110:8765
+01:11:14 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+01:11:14 [INFO] werkzeug:  * Restarting with watchdog (inotify)
+01:11:15 [INFO] clara-server: ═══════════════════════════════════════════════
+01:11:15 [INFO] clara-server:   Clara AI – Dashboard & API Server
+01:11:15 [INFO] clara-server:   http://localhost:8765
+01:11:15 [INFO] clara-server: ═══════════════════════════════════════════════
+01:11:15 [WARNING] werkzeug:  * Debugger is active!
+01:11:15 [INFO] werkzeug:  * Debugger PIN: 138-869-124
+01:11:40 [WARNING] clara-engine: [MultiAgent] No NVIDIA_API_KEY — falling back to classic Gemini mode
+01:11:40 [INFO] clara-engine: Gemini client initialized.
+01:11:40 [INFO] clara-engine: [MultiAgent] Classic mode: single Gemini call
+01:11:40 [INFO] clara-engine: Analyzing demo transcript for account: ben
+01:11:40 [INFO] google_genai.models: AFC is enabled with max remote calls: 10.
+01:11:40 [INFO] httpx: HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 400 Bad Request"
+01:11:40 [ERROR] clara-engine: Gemini API error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+01:11:40 [WARNING] clara-engine: Gemini failed, using rule-based extraction.
+01:11:40 [INFO] clara-engine: Analyzing onboarding for account: ben
+01:11:40 [INFO] google_genai.models: AFC is enabled with max remote calls: 10.
+01:11:41 [INFO] httpx: HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 400 Bad Request"
+01:11:41 [ERROR] clara-engine: Gemini API error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+01:11:41 [WARNING] clara-engine: Gemini failed, using rule-based onboarding extraction.
+01:11:41 [INFO] clara-engine: Saved /home/dharun/gemini_and_me/Clara_Automation/outputs/accounts/ben/changelog.md
+01:11:41 [INFO] clara-retell: Updating existing deployment: agent=agent_672c71a5c4c0ab2769e52b080a, llm=llm_e72866755722d6a844d7a1cd0975
+01:11:41 [INFO] clara-retell: Updating LLM llm_e72866755722d6a844d7a1cd0975...
+01:11:41 [INFO] clara-retell: Updating agent agent_672c71a5c4c0ab2769e52b080a...
+01:11:42 [INFO] werkzeug: 127.0.0.1 - - [03/Apr/2026 01:11:42] "POST /api/batch HTTP/1.1" 200 -
+01:12:38 [INFO] werkzeug:  * Detected change in '/home/dharun/gemini_and_me/Clara_Automation/scripts/mcp_server.py', reloading
+01:12:38 [INFO] werkzeug:  * Restarting with watchdog (inotify)
+01:12:39 [INFO] clara-server: ═══════════════════════════════════════════════
+01:12:39 [INFO] clara-server:   Clara AI – Dashboard & API Server
+01:12:39 [INFO] clara-server:   http://localhost:8765
+01:12:39 [INFO] clara-server: ═══════════════════════════════════════════════
+01:12:39 [WARNING] werkzeug:  * Debugger is active!
+01:12:39 [INFO] werkzeug:  * Debugger PIN: 138-869-124

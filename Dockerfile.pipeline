@@ -1,0 +1,14 @@
+FROM python:3.11-slim
+
+WORKDIR /data
+
+RUN pip install --no-cache-dir \
+    google-genai \
+    requests \
+    flask
+
+COPY scripts/ /data/scripts/
+
+EXPOSE 8765
+
+CMD ["python3", "/data/scripts/pipeline_server.py"]

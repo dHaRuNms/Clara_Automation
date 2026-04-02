@@ -2,22 +2,31 @@
     "account_id": "ben",
     "company_name": "Ben's Electric Solutions",
     "business_hours": "Monday to Friday, 8 AM to 5 PM, Mountain Time",
+    "timezone": "Mountain Time",
     "office_address": "",
+    "contact_email": "info@benselectricsolutionsteam.com",
+    "contact_phone": "403-870-8494",
     "services_supported": [
-        "Electrical Trade",
-        "Job qualification"
+        "Electrical"
     ],
     "emergency_definition": [
-        "Power outage",
+        "Power Outage",
         "Sparking",
-        "Exposed wires"
+        "Exposed Wires"
     ],
-    "emergency_routing_rules": "Route to cell 403-870-8494. If no answer, dispatch ASAP.",
-    "non_emergency_routing_rules": "Collect details, inform callback will happen during business hours.",
-    "call_transfer_rules": "Fallback to voicemail if transfer fails after 30 seconds.",
-    "integration_constraints": "Never create emergency jobs automatically in Jobber without explicit approval.",
-    "after_hours_flow_summary": "Greet -> Ask Purpose -> Confirm Emergency -> Collect Details",
-    "office_hours_flow_summary": "Greet -> Ask Purpose -> Collect Info -> Route",
+    "emergency_routing_rules": "Route to 403-870-8494.",
+    "emergency_phone": "403-870-8494",
+    "non_emergency_routing_rules": "",
+    "call_transfer_rules": "Fallback to fallback after 30 seconds.",
+    "transfer_timeout_seconds": 30,
+    "integration_constraints": "Never create jobs automatically in Jobber without approval.",
+    "crm_system": "Jobber",
+    "after_hours_flow_summary": "",
+    "office_hours_flow_summary": "",
+    "voicemail_message": "",
     "questions_or_unknowns": [],
-    "notes": "3 vans, 2 subcontractors, expanding to 5 vans."
+    "notes": "",
+    "version": "v2",
+    "created_at": "2026-04-03T01:11:40.991542",
+    "updated_at": "2026-04-03T01:11:41.196655"
 }

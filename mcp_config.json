@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "clara-multi-agent": {
+      "command": "python3",
+      "args": [
+        "/home/dharun/gemini_and_me/Clara_Automation/scripts/mcp_server.py"
+      ],
+      "env": {
+        "RETELL_API_KEY": "key_8b72c05fa199b67482f7bcc7e083"
+      }
+    }
+  }
+}

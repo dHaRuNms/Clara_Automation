@@ -1,7 +1,11 @@
-# Use the official n8n image directly
-FROM docker.n8n.io/n8nio/n8n:latest
+# Use the Alpine-based n8n image from DockerHub
+FROM n8nio/n8n:latest
 
-# No build-time steps to avoid exit code 127
+# Install Python3 + pip + pipeline dependencies
 USER root
-RUN mkdir -p /data && chown -R node:node /data
+RUN apk add --no-cache python3 py3-pip jq && \
+  python3 -m pip install --break-system-packages --no-cache-dir \
+  google-genai \
+  requests && \
+  mkdir -p /data && chown -R node:node /data
 USER node

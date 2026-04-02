@@ -1,10 +1,9 @@
-# Changelog v1 -> v2 (2026-03-04)
+# Changelog v1 → v2 (2026-04-03 01:11)
 
-The following changes were applied after processing the onboarding call:
+**Account:** ben
 
-- Updated business_hours based on onboarding transcript.
-- Added specific emergency_definition triggers.
-- Defined emergency_routing_rules and contact numbers.
-- Defined non_emergency_routing_rules.
-- Added strict integration_constraints for Jobber.
-- Configured call_transfer_rules timeouts and fallback.
+- Updated business_hours: Monday to Friday, 8 AM to 5 PM, Mountain Time
+- Added emergency_definition: Power Outage, Sparking, Exposed Wires
+- Set emergency routing: 403-870-8494
+- Set transfer rules: fallback to fallback after 30s
+- Set integration constraint: no auto-create in Jobber

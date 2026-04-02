@@ -1,8 +1,10 @@
-version: '3.8'
+# Clara AI – n8n Docker Compose
+# Uses n8n for workflow orchestration + Python sidecar for pipeline execution
 
 services:
+  # ── n8n Workflow Engine ──
   n8n:
-    image: n8nio/n8n:latest
+    image: n8nio/n8n:1.76.1
     restart: always
     ports:
       - "5678:5678"
@@ -12,14 +14,29 @@ services:
       - N8N_PROTOCOL=http
       - NODE_ENV=production
       - WEBHOOK_URL=http://localhost:5678/
-      - GENERIC_TIMEZONE=America/New_York
-      - N8N_BASH_ALLOW_EXECUTE_COMMAND=true
-      - RETELL_API_KEY=key_8b72c05fa199b67482f7bcc7e083
-      - ASSEMBLYAI_API_KEY=${ASSEMBLYAI_API_KEY}
+      - GENERIC_TIMEZONE=Asia/Kolkata
+      - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
     volumes:
       - n8n_data:/home/node/.n8n
-      # Map the local project folder into the n8n container
       - ./:/data
+
+  # ── Python Pipeline Runner ──
+  # Runs the Clara extraction pipeline with Gemini
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipeline
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - RETELL_API_KEY=${RETELL_API_KEY:-key_8b72c05fa199b67482f7bcc7e083}
+      - ASSEMBLYAI_API_KEY=${ASSEMBLYAI_API_KEY:-bf81c834ee6a41878f223c6c6d2d3cd1}
+    volumes:
+      - ./:/data
+    ports:
+      - "8765:8765"
+    restart: always
+    env_file:
+      - .env
 
 volumes:
   n8n_data:

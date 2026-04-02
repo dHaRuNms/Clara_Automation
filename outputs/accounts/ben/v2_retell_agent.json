@@ -1,0 +1,128 @@
+{
+    "agent_name": "Clara AI \u2013 Ben's Electric Solutions",
+    "voice_id": "retell-Cimo",
+    "voice_temperature": 0.5,
+    "voice_speed": 1,
+    "enable_dynamic_voice_speed": false,
+    "enable_dynamic_responsiveness": false,
+    "volume": 1,
+    "responsiveness": 0.6,
+    "interruption_sensitivity": 0.5,
+    "enable_backchannel": true,
+    "backchannel_frequency": 0.5,
+    "backchannel_words": [
+        "yeah",
+        "uh-huh",
+        "okay"
+    ],
+    "reminder_trigger_ms": 15000,
+    "reminder_max_count": 2,
+    "ambient_sound": "call-center",
+    "ambient_sound_volume": 0.2,
+    "language": "en-US",
+    "normalize_for_speech": true,
+    "end_call_after_silence_ms": 30000,
+    "max_call_duration_ms": 1800000,
+    "enable_voicemail_detection": true,
+    "voicemail_message": "Hi, you've reached Ben's Electric Solutions. We're sorry we missed your call. Please leave a message and we'll get back to you during our next business day.",
+    "voicemail_detection_timeout_ms": 30000,
+    "post_call_analysis_data": [
+        {
+            "type": "string",
+            "name": "caller_name",
+            "description": "The full name of the caller.",
+            "examples": [
+                "John Smith",
+                "Sarah Johnson"
+            ]
+        },
+        {
+            "type": "string",
+            "name": "caller_phone",
+            "description": "The phone number provided by the caller.",
+            "examples": [
+                "403-555-1234",
+                "555-0199"
+            ]
+        },
+        {
+            "type": "string",
+            "name": "call_type",
+            "description": "The type of call: emergency, service_request, inquiry, or complaint.",
+            "examples": [
+                "emergency",
+                "service_request",
+                "inquiry"
+            ]
+        },
+        {
+            "type": "string",
+            "name": "service_requested",
+            "description": "The specific service the caller needs.",
+            "examples": [
+                "electrical repair",
+                "inspection",
+                "emergency power outage"
+            ]
+        },
+        {
+            "type": "string",
+            "name": "urgency_level",
+            "description": "The urgency: critical, high, medium, or low.",
+            "examples": [
+                "critical",
+                "high",
+                "medium",
+                "low"
+            ]
+        },
+        {
+            "type": "string",
+            "name": "caller_address",
+            "description": "The address or location provided by the caller.",
+            "examples": [
+                "123 Main Street",
+                "Downtown office"
+            ]
+        },
+        {
+            "type": "string",
+            "name": "action_taken",
+            "description": "What action was taken: transferred, message_taken, appointment_scheduled, information_provided.",
+            "examples": [
+                "transferred",
+                "message_taken",
+                "appointment_scheduled"
+            ]
+        },
+        {
+            "type": "string",
+            "name": "preferred_schedule",
+            "description": "When the caller is available or prefers to be contacted back, e.g. 'tomorrow morning', 'after 3pm', 'weekdays only'.",
+            "examples": [
+                "tomorrow morning",
+                "after 3pm",
+                "any weekday"
+            ]
+        },
+        {
+            "type": "string",
+            "name": "call_summary",
+            "description": "A 1-2 sentence summary of the caller's problem or request.",
+            "examples": [
+                "Caller reported a power outage in their basement and needs emergency service.",
+                "Customer wants to schedule an electrical inspection for their new home."
+            ]
+        }
+    ],
+    "post_call_analysis_model": "gpt-4.1",
+    "analysis_successful_prompt": "The agent successfully collected caller information and either transferred the call, took a message, or resolved the inquiry.",
+    "analysis_summary_prompt": "Summarize the call outcome: who called, what they needed, and what action was taken.",
+    "analysis_user_sentiment_prompt": "Rate the caller's sentiment from 1-5 (1=very negative, 5=very positive) based on their tone throughout the call.",
+    "stt_mode": "fast",
+    "denoising_mode": "noise-cancellation",
+    "boosted_keywords": [
+        "Ben's Electric Solutions",
+        "Electrical"
+    ]
+}

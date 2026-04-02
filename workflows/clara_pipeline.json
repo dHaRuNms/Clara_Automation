@@ -1,37 +1,527 @@
 {
-  "name": "Clara Automation Pipeline (Batch)",
+  "name": "Clara AI \u2013 Full Automation Pipeline",
   "nodes": [
     {
       "parameters": {},
-      "id": "manual-trigger-id",
-      "name": "When clicking \"Execute Workflow\"",
+      "id": "node-manual-trigger",
+      "name": "\ud83d\udd27 Manual Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        250,
+        200,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8765/list",
+        "options": {},
+        "method": "GET"
+      },
+      "id": "node-list-files",
+      "name": "\ud83d\udcc1 List Transcript Files",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        450,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse the file listing and sort: demos first, then onboarding\nconst input = $input.first();\nconst files = input.json.files || [];\n\nfiles.sort((a, b) => {\n  if (a.type === 'demo' && b.type === 'onboarding') return -1;\n  if (a.type === 'onboarding' && b.type === 'demo') return 1;\n  return a.account.localeCompare(b.account);\n});\n\nreturn files.map(f => ({ json: f }));"
+      },
+      "id": "node-parse-files",
+      "name": "\ud83d\udd00 Parse & Sort Files",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-demo",
+              "leftValue": "={{ $json.type }}",
+              "rightValue": "demo",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-route-type",
+      "name": "\ud83d\udccb Demo or Onboarding?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8765/run",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "={{ $json.file }}"
+            },
+            {
+              "name": "type",
+              "value": "demo"
+            },
+            {
+              "name": "account",
+              "value": "={{ $json.account }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "node-run-demo",
+      "name": "\ud83e\udde0 Run Demo Pipeline",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1500,
         300
       ]
     },
     {
       "parameters": {
-        "command": "bash /data/scripts/run_batch.sh /data/transcripts /data/outputs/accounts"
+        "method": "POST",
+        "url": "http://localhost:8765/run",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "={{ $json.file }}"
+            },
+            {
+              "name": "type",
+              "value": "onboarding"
+            },
+            {
+              "name": "account",
+              "value": "={{ $json.account }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 120000
+        }
       },
-      "id": "execute-command-id",
-      "name": "Execute Batch Pipeline",
-      "type": "n8n-nodes-base.executeCommand",
+      "id": "node-run-onboarding",
+      "name": "\ud83e\udde0 Run Onboarding Pipeline",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1500,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract the pipeline result\nconst input = $input.first();\nconst result = input.json.output || input.json;\n\nconst hasAppointment = result.appointment_details && result.appointment_details.start_time;\n\nreturn [{\n  json: {\n    account_id: result.account_id || 'unknown',\n    pipeline: result.pipeline || 'demo',\n    version: result.version || 'v1',\n    status: result.status || 'unknown',\n    company_name: result.memo_summary?.company || result.account_id || '',\n    unknowns_count: result.memo_summary?.unknowns_count || 0,\n    has_appointment: hasAppointment || false,\n    appointment: hasAppointment ? result.appointment_details : null\n  }\n}];"
+      },
+      "id": "node-parse-demo-result",
+      "name": "\ud83d\udcca Parse Demo Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract the pipeline result\nconst input = $input.first();\nconst result = input.json.output || input.json;\n\nconst hasAppointment = result.appointment_details && result.appointment_details.start_time;\n\nreturn [{\n  json: {\n    account_id: result.account_id || 'unknown',\n    pipeline: result.pipeline || 'onboarding',\n    version: result.version || 'v2',\n    status: result.status || 'unknown',\n    company_name: result.memo_summary?.company || result.account_id || '',\n    changes_count: result.changes_count || 0,\n    has_appointment: hasAppointment || false,\n    appointment: hasAppointment ? result.appointment_details : null\n  }\n}];"
+      },
+      "id": "node-parse-onboarding-result",
+      "name": "\ud83d\udcca Parse Onboarding Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1750,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-has-apt",
+              "leftValue": "={{ $json.has_appointment }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-route-calendar-demo",
+      "name": "\ud83d\udcc5 Has Appointment? (Demo)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-has-apt-ob",
+              "leftValue": "={{ $json.has_appointment }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-route-calendar-onboarding",
+      "name": "\ud83d\udcc5 Has Appointment? (Onboarding)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "event",
+        "operation": "create",
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": "primary"
+        },
+        "start": "={{ $json.appointment.start_time }}",
+        "end": "={{ $json.appointment.end_time || $json.appointment.start_time }}",
+        "additionalFields": {
+          "summary": "={{ $json.appointment.summary || 'Clara AI - Service Appointment' }}",
+          "description": "=Booked via Clara AI Pipeline\nAccount: {{ $json.account_id }}\nCompany: {{ $json.company_name }}"
+        }
+      },
+      "id": "node-gcal-create-demo",
+      "name": "\ud83d\udcc6 Create Calendar Event (Demo)",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.2,
+      "position": [
+        2300,
+        200
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "GOOGLE_CALENDAR_CREDENTIAL_ID",
+          "name": "Google Calendar Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "event",
+        "operation": "create",
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": "primary"
+        },
+        "start": "={{ $json.appointment.start_time }}",
+        "end": "={{ $json.appointment.end_time || $json.appointment.start_time }}",
+        "additionalFields": {
+          "summary": "={{ $json.appointment.summary || 'Clara AI - Service Appointment' }}",
+          "description": "=Booked via Clara AI Pipeline (v2 Onboarding)\nAccount: {{ $json.account_id }}\nCompany: {{ $json.company_name }}"
+        }
+      },
+      "id": "node-gcal-create-onboarding",
+      "name": "\ud83d\udcc6 Create Calendar Event (Onboarding)",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.2,
+      "position": [
+        2300,
+        430
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "GOOGLE_CALENDAR_CREDENTIAL_ID",
+          "name": "Google Calendar Account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "node-no-apt-demo",
+      "name": "\u23ed\ufe0f No Appointment (Demo)",
+      "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        500,
-        300
+        2300,
+        350
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "node-no-apt-onboarding",
+      "name": "\u23ed\ufe0f No Appointment (Onboarding)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2300,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log the result for this file\nconst input = $input.first();\nconst result = input.json;\n\nreturn [{\n  json: {\n    timestamp: new Date().toISOString(),\n    account_id: result.account_id || 'unknown',\n    pipeline: result.pipeline || 'unknown',\n    version: result.version || 'unknown',\n    status: result.status || 'unknown',\n    company_name: result.company_name || '',\n    calendar_event_created: result.has_appointment || false,\n    changes_count: result.changes_count || 0\n  }\n}];"
+      },
+      "id": "node-log-result",
+      "name": "\ud83d\udccb Log Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build final summary when all batches are done\nconst items = $input.all();\nconst results = items.map(i => i.json);\n\nconst total = results.length;\nconst success = results.filter(r => r.status === 'success').length;\nconst failed = results.filter(r => r.status === 'error').length;\nconst demos = results.filter(r => r.pipeline === 'demo').length;\nconst onboardings = results.filter(r => r.pipeline === 'onboarding').length;\nconst calendarEvents = results.filter(r => r.calendar_event_created).length;\n\nreturn [{\n  json: {\n    pipeline_run: new Date().toISOString(),\n    total_files_processed: total,\n    successful: success,\n    failed: failed,\n    demo_pipelines: demos,\n    onboarding_pipelines: onboardings,\n    calendar_events_created: calendarEvents,\n    accounts: results.map(r => ({\n      account: r.account_id,\n      type: r.pipeline,\n      status: r.status\n    }))\n  }\n}];"
+      },
+      "id": "node-summary",
+      "name": "\ud83d\udcca Batch Summary Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2850,
+        400
       ]
     }
   ],
   "connections": {
-    "When clicking \"Execute Workflow\"": {
+    "\ud83d\udd27 Manual Trigger": {
       "main": [
         [
           {
-            "node": "Execute Batch Pipeline",
+            "node": "\ud83d\udcc1 List Transcript Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udcc1 List Transcript Files": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udd00 Parse & Sort Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udd00 Parse & Sort Files": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udccb Demo or Onboarding?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udccb Demo or Onboarding?": {
+      "main": [
+        [
+          {
+            "node": "\ud83e\udde0 Run Demo Pipeline",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "\ud83e\udde0 Run Onboarding Pipeline",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83e\udde0 Run Demo Pipeline": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udcca Parse Demo Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83e\udde0 Run Onboarding Pipeline": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udcca Parse Onboarding Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udcca Parse Demo Result": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udcc5 Has Appointment? (Demo)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udcca Parse Onboarding Result": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udcc5 Has Appointment? (Onboarding)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udcc5 Has Appointment? (Demo)": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udcc6 Create Calendar Event (Demo)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "\u23ed\ufe0f No Appointment (Demo)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udcc5 Has Appointment? (Onboarding)": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udcc6 Create Calendar Event (Onboarding)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "\u23ed\ufe0f No Appointment (Onboarding)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udcc6 Create Calendar Event (Demo)": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udccb Log Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\u23ed\ufe0f No Appointment (Demo)": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udccb Log Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udcc6 Create Calendar Event (Onboarding)": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udccb Log Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\u23ed\ufe0f No Appointment (Onboarding)": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udccb Log Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udccb Log Result": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udcca Batch Summary Report",
             "type": "main",
             "index": 0
           }
@@ -41,5 +531,19 @@
   },
   "settings": {
     "executionOrder": "v1"
-  }
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "Clara AI",
+      "id": "tag-clara"
+    },
+    {
+      "name": "Automation",
+      "id": "tag-automation"
+    }
+  ],
+  "triggerCount": 1,
+  "pinData": {},
+  "versionId": "v2.0.0"
 }

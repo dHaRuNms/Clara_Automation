@@ -1,0 +1,19 @@
+nohup: ignoring input
+Clara Pipeline Server starting on port 8765...
+ * Serving Flask app 'pipeline_server'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8765
+ * Running on http://192.168.1.110:8765
+Press CTRL+C to quit
+127.0.0.1 - - [04/Mar/2026 17:23:27] "GET /list HTTP/1.1" 200 -
+127.0.0.1 - - [04/Mar/2026 17:23:45] "GET /list HTTP/1.1" 200 -
+127.0.0.1 - - [04/Mar/2026 17:24:15] "GET /list HTTP/1.1" 200 -
+127.0.0.1 - - [04/Mar/2026 17:30:37] "GET /list HTTP/1.1" 200 -
+127.0.0.1 - - [04/Mar/2026 17:31:53] "GET /list HTTP/1.1" 200 -
+127.0.0.1 - - [04/Mar/2026 17:31:56] "POST /run HTTP/1.1" 200 -
+127.0.0.1 - - [04/Mar/2026 17:32:02] "POST /run HTTP/1.1" 200 -
+127.0.0.1 - - [04/Mar/2026 17:33:54] "GET /list HTTP/1.1" 200 -
+127.0.0.1 - - [04/Mar/2026 17:33:57] "POST /run HTTP/1.1" 200 -
+127.0.0.1 - - [04/Mar/2026 17:34:01] "POST /run HTTP/1.1" 200 -
